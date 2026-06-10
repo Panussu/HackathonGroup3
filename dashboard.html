@@ -379,8 +379,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:50;backdrop-filter:blur(14px);ba
 nav .wrap{display:flex;align-items:center;justify-content:space-between;height:62px}
 .logo{font-family:'Space Grotesk';font-weight:700;letter-spacing:1px;font-size:15px}
 .logo b{background:linear-gradient(90deg,var(--p2),var(--p3));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.navright{display:flex;align-items:center;gap:20px}
 .navlinks{display:flex;gap:24px;font-size:13px;color:var(--mut)}
 .navlinks a{color:var(--mut);text-decoration:none;transition:.2s}.navlinks a:hover{color:var(--ink)}
+.langbtn{font-family:var(--mono);font-size:12px;font-weight:700;padding:6px 14px;border-radius:30px;border:1px solid var(--line);background:var(--glass);color:var(--ink);cursor:pointer;transition:.2s}
+.langbtn:hover{border-color:var(--p3);color:var(--p3)}
 @media(max-width:680px){.navlinks{display:none}}
 .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;padding:90px 22px 40px}
 .kicker{font-family:var(--mono);font-size:12px;letter-spacing:5px;color:var(--p3);padding:8px 18px;border:1px solid var(--line);border-radius:40px;background:var(--glass);backdrop-filter:blur(8px);animation:pulse 3s infinite}
@@ -419,6 +422,7 @@ h2{font-family:'Space Grotesk';font-size:clamp(30px,5vw,52px);font-weight:700;le
 .card:hover::after{opacity:1}
 .stat .num{font-family:'Space Grotesk';font-size:clamp(34px,4vw,46px);font-weight:700;line-height:1}
 .stat .lbl{color:var(--mut);font-size:13px;margin-top:8px;font-weight:600}
+.subnote{color:var(--p4);font-size:12px;margin-top:6px;font-family:var(--mono);line-height:1.4}
 .g2{background:linear-gradient(120deg,var(--p3),#22d3ee);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .g3{background:linear-gradient(120deg,var(--p4),#fbbf24);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .gr{background:linear-gradient(120deg,var(--red),var(--p2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
@@ -471,64 +475,67 @@ footer .big{font-family:'Space Grotesk';font-size:clamp(28px,5vw,48px);font-weig
 
 <nav><div class="wrap">
   <div class="logo">// THE <b>SILENT THREAT</b></div>
-  <div class="navlinks"><a href="#who">WHO</a><a href="#when">WHEN &amp; HOW</a><a href="#hidden">HIDDEN</a><a href="#how">METHOD</a></div>
+  <div class="navright">
+    <div class="navlinks"><a href="#who">WHO</a><a href="#when">WHEN &amp; HOW</a><a href="#hidden">HIDDEN</a><a href="#how">METHOD</a></div>
+    <button id="langBtn" class="langbtn">EN</button>
+  </div>
 </div></nav>
 
 <header class="hero">
   <div class="kicker">INCIDENT RESPONSE · NEXUSCART</div>
   <h1 class="title"><span class="glitch" data-t="SILENT THREAT">SILENT THREAT</span></h1>
-  <p class="lede">เบื้องหลังหน้าจอ มีสงครามเงียบกำลังเกิดขึ้น — เราขุด Log 21 ล้านบรรทัด เพื่อตามล่ากลุ่มแฮกเกอร์ และถอดชื่อจริงของคนร้าย</p>
-  <div class="cta"><a href="#who" class="btn solid">เริ่มสืบสวน ↓</a><a href="#hidden" class="btn ghost">เปิดชื่อคนร้าย</a></div>
+  <p class="lede" id="i_lede">เบื้องหลังหน้าจอ มีสงครามเงียบกำลังเกิดขึ้น — เราขุด Log <b style="color:#fff">21 ล้านบรรทัด</b> เพื่อตามล่ากลุ่มแฮกเกอร์ และถอดชื่อจริงของคนร้าย</p>
+  <div class="cta"><a href="#who" class="btn solid" id="i_btn1">เริ่มสืบสวน ↓</a><a href="#hidden" class="btn ghost" id="i_btn2">เปิดชื่อคนร้าย</a></div>
   <div class="scrolldown"></div>
 </header>
 
 <div class="wrap">
   <section style="padding-top:40px">
     <div class="bento cols-3">
-      <div class="card stat rv"><div class="num g2" data-count="21146398">0</div><div class="lbl">บรรทัด Log ที่วิเคราะห์</div></div>
-      <div class="card stat rv"><div class="num gr" data-count="5372902">0</div><div class="lbl">Request โจมตี ที่ตรวจพบ</div></div>
-      <div class="card stat rv"><div class="num gr" data-count="19">0</div><div class="lbl">IP กลุ่มแฮกเกอร์</div></div>
-      <div class="card stat rv"><div class="num g3" data-count="406">0</div><div class="lbl">วันที่ถูกโจมตี</div></div>
-      <div class="card stat rv"><div class="num gr" data-count="297">0</div><div class="lbl">วันที่ระบบ "ล่ม"</div></div>
-      <div class="card stat rv"><div class="num g3" data-count="109">0</div><div class="lbl">วันที่ระบบ "หน่วง"</div></div>
+      <div class="card stat rv"><div class="num g2" data-count="21146398">0</div><div class="lbl" id="i_s1">บรรทัด Log ที่วิเคราะห์</div></div>
+      <div class="card stat rv"><div class="num gr" data-count="5372902">0</div><div class="lbl" id="i_s2">Request โจมตี ที่ตรวจพบ</div></div>
+      <div class="card stat rv"><div class="num gr" data-count="19">0</div><div class="lbl" id="i_s3">IP กลุ่มแฮกเกอร์</div></div>
+      <div class="card stat rv"><div class="num g3" data-count="412">0</div><div class="lbl" id="i_s4">วันที่พบ request คนร้าย</div><div class="subnote" id="i_s4n">▸ โจมตีจริงจัง 406 วัน (ล่ม+หน่วง)</div></div>
+      <div class="card stat rv"><div class="num gr" data-count="297">0</div><div class="lbl" id="i_s5">วันที่ระบบ "ล่ม" (crash)</div></div>
+      <div class="card stat rv"><div class="num g3" data-count="109">0</div><div class="lbl" id="i_s6">วันที่ระบบ "หน่วง" (lag)</div></div>
     </div>
   </section>
 
   <section id="who">
     <div class="eyebrow rv">01 — IDENTIFY</div>
     <h2 class="rv">WHO ARE THEY?</h2>
-    <p class="sub rv">กรอง request ที่ทำให้ระบบ error (status ≥ 500) แล้วนับตาม IP — พบ <b style="color:var(--ink)">19 IP</b> ที่ยิงเข้ามาจำนวนเท่ากันเป๊ะ (~297,000 ครั้ง/ตัว) บ่งชี้ว่าเป็น <b style="color:var(--p2)">botnet ที่สั่งการร่วมกัน</b></p>
+    <p class="sub rv" id="i_who_sub">กรอง request ที่ทำให้ระบบ error (status ≥ 500) แล้วนับตาม IP — พบ <b style="color:var(--ink)">19 IP</b> ที่ยิงเข้ามาจำนวนเท่ากันเป๊ะ (~297,000 ครั้ง/ตัว) บ่งชี้ว่าเป็น <b style="color:var(--p2)">botnet ที่สั่งการร่วมกัน</b></p>
     <div class="bento cols-2">
       <div class="card span2 rv"><canvas id="ipChart" height="150"></canvas></div>
       <div class="card rv" style="padding:0;grid-column:auto"><div class="scroll"><table>
         <thead><tr><th>IP ADDRESS</th><th>REQUESTS</th><th>ERRORS</th></tr></thead><tbody id="ipTable"></tbody>
       </table></div></div>
     </div>
-    <div class="callout rv">💡 <b>เบาะแสชี้หัวโจก:</b> keyword <code style="display:inline;padding:1px 7px">hackathon#1</code> ฝังใน log แค่ <b>บรรทัดเดียว</b> และผูกกับ IP <b style="color:var(--p4)">197.82.237.190</b> → คือ "หัวโจก" ที่ซ่อนชื่อตัวเองไว้</div>
+    <div class="callout rv" id="i_who_call">💡 <b>เบาะแสชี้หัวโจก:</b> keyword <code style="display:inline;padding:1px 7px">hackathon#1</code> ฝังใน log แค่ <b>บรรทัดเดียว</b> และผูกกับ IP <b style="color:var(--p4)">197.82.237.190</b> → คือ "หัวโจก" ที่ซ่อนชื่อตัวเองไว้</div>
   </section>
 
   <section id="when">
     <div class="eyebrow rv">02 — ANALYZE PATTERN</div>
     <h2 class="rv">WHEN &amp; HOW?</h2>
-    <p class="sub rv">การโจมตีมี 2 รูปแบบสลับกันตลอด 2 ปี — <span class="tag c">CRASH ระบบล่ม</span> (status 500/504) และ <span class="tag s">SLOW ระบบหน่วง</span> (status 200 แต่ตอบช้ากว่า 5 วินาที)</p>
+    <p class="sub rv" id="i_when_sub">การโจมตีมี 2 รูปแบบสลับกันตลอด 2 ปี — <span class="tag c">CRASH ระบบล่ม</span> (status 500/504) และ <span class="tag s">SLOW ระบบหน่วง</span> (status 200 แต่ตอบช้ากว่า 5 วินาที)</p>
     <div class="card rv"><canvas id="timeChart" height="120"></canvas>
-      <div class="legend"><span><span class="dot" style="background:var(--red)"></span>ระบบล่ม (500/504)</span><span><span class="dot" style="background:var(--p4)"></span>ระบบหน่วง (200 ตอบช้า)</span></div>
+      <div class="legend"><span><span class="dot" style="background:var(--red)"></span><span id="i_leg1">ระบบล่ม (500/504)</span></span><span><span class="dot" style="background:var(--p4)"></span><span id="i_leg2">ระบบหน่วง (200 ตอบช้า)</span></span></div>
     </div>
     <div class="bento cols-2" style="margin-top:16px">
       <div class="card rv"><canvas id="hourChart" height="150"></canvas></div>
       <div class="card rv"><canvas id="statusChart" height="150"></canvas></div>
     </div>
-    <div class="callout rv">🕐 <b>รูปแบบที่จับได้:</b> ยิงหนักสุดช่วง <b>10:00–15:00</b> (เวลาทำงาน เพื่อสร้างความเสียหายสูงสุด) · เริ่มพร้อมกันทั้ง 19 IP เวลา ~10:00 ของวันที่ 13 มิ.ย. 2024</div>
+    <div class="callout rv" id="i_when_call">🕐 <b>รูปแบบที่จับได้:</b> ยิงหนักสุดช่วง <b>10:00–15:00</b> (เวลาทำงาน เพื่อสร้างความเสียหายสูงสุด) · เริ่มพร้อมกันทั้ง 19 IP เวลา ~10:00 ของวันที่ 13 มิ.ย. 2024</div>
   </section>
 
   <section id="hidden">
-    <div class="eyebrow rv">BONUS — DECODE</div>
-    <h2 class="rv">ชื่อจริงของคนร้าย</h2>
-    <p class="sub rv">คนร้ายอวดฝีมือด้วยการฝัง "ลายเซ็นดิจิทัล" — แอบเติมตัวอักษร 1 ตัวท้าย URL (เช่น <code style="display:inline;padding:1px 7px">/productsE</code>) แล้วยิงซ้ำเป็นพันครั้งแบบ <b style="color:var(--p3)">Run-Length Encoding</b></p>
+    <div class="eyebrow rv">03 — HIDDEN BONUS · DECODE</div>
+    <h2 class="rv">THE HIDDEN MASTERMIND</h2>
+    <p class="sub rv" id="i_hid_sub">คนร้ายอวดฝีมือด้วยการฝัง "ลายเซ็นดิจิทัล" — แอบเติมตัวอักษร 1 ตัวท้าย URL (เช่น <code style="display:inline;padding:1px 7px">/productsE</code>) แล้วยิงซ้ำเป็นพันครั้งแบบ <b style="color:var(--p3)">Run-Length Encoding</b></p>
     <div class="decoder rv">
-      <div style="color:var(--mut);font-size:12px;font-family:var(--mono);letter-spacing:2px">RAW SIGNATURE — อักษรท้าย URL ยิงซ้ำเป็นบล็อก (ตัวอักษร×จำนวนครั้ง)</div>
+      <div style="color:var(--mut);font-size:12px;font-family:var(--mono);letter-spacing:2px" id="i_raw">RAW SIGNATURE — อักษรท้าย URL ยิงซ้ำเป็นบล็อก (ตัวอักษร×จำนวนครั้ง)</div>
       <div class="runs" id="runs"></div>
-      <div class="arrow">↓&nbsp; ยุบตัวซ้ำให้เหลือตัวเดียว <code style="display:inline;padding:1px 7px">sed 's/(.)\1*/\1/g'</code> &nbsp;↓</div>
+      <div class="arrow" id="i_arrow">↓&nbsp; ยุบตัวซ้ำให้เหลือตัวเดียว <code style="display:inline;padding:1px 7px">sed 's/(.)\1*/\1/g'</code> &nbsp;↓</div>
       <div style="color:var(--mut);font-size:12px;font-family:var(--mono);letter-spacing:2px;margin-bottom:10px">DECODED MESSAGE</div>
       <div class="decoded" id="decoded"></div>
       <div class="reveal-name">
@@ -539,69 +546,69 @@ footer .big{font-family:'Space Grotesk';font-size:clamp(28px,5vw,48px);font-weig
   </section>
 
   <section id="how">
-    <div class="eyebrow rv">METHODOLOGY</div>
-    <h2 class="rv">เราหาเจอได้อย่างไร?</h2>
-    <p class="sub rv">วิเคราะห์ไฟล์ log ขนาด <b style="color:var(--ink)">1.4 GB / 21 ล้านบรรทัด</b> ด้วย command-line ของ Linux ล้วน (awk, grep, sed) — ไม่ต้องใช้ฐานข้อมูลหรือ AI · แนวคิดหลัก: "ของปกติตอบเร็ว+200, ของโจมตีช้า+error"</p>
+    <div class="eyebrow rv">04 — METHODOLOGY</div>
+    <h2 class="rv">HOW DID WE FIND THEM?</h2>
+    <p class="sub rv" id="i_meth_sub">วิเคราะห์ไฟล์ log ขนาด <b style="color:var(--ink)">1.4 GB / 21 ล้านบรรทัด</b> ด้วย command-line ของ Linux ล้วน (awk, grep, sed) — ไม่ต้องใช้ฐานข้อมูลหรือ AI · แนวคิดหลัก: "ของปกติตอบเร็ว+200, ของโจมตีช้า+error"</p>
     <div class="steps">
 
       <div class="stepcard rv"><div class="snum"></div><div>
-        <div class="q">// จุดเริ่ม: ไฟล์ปริศนาถูกซ่อนไว้ที่ไหน?</div>
-        <h4>ตามหาไฟล์ที่อาจารย์ซ่อนไว้</h4>
-        <p>ไฟล์ <code style="display:inline;padding:1px 6px">cart_web.log</code> ไม่ได้อยู่ใน working folder ตั้งแต่แรก แต่ถูกซ่อนไว้ลึกในระบบ (path <code style="display:inline;padding:1px 6px">.../clmystery/mystery/streets/locked</code>) — สังเกตว่าน่าจะมีไฟล์ "เพิ่งถูกเพิ่มเข้ามาใหม่" จึงใช้ <b style="color:var(--p4)">ls -lt</b> เรียงไฟล์ตามเวลาแก้ไขล่าสุด (ใหม่สุดอยู่บน) เพื่อจับไฟล์แปลกปลอม แล้วเข้าไปตรวจข้างใน</p>
+        <div class="q" id="i_q0">// จุดเริ่ม: ไฟล์ปริศนาถูกซ่อนไว้ที่ไหน?</div>
+        <h4 id="i_h0">ตามหาไฟล์ที่อาจารย์ซ่อนไว้</h4>
+        <p id="i_p0">ไฟล์ <code style="display:inline;padding:1px 6px">cart_web.log</code> ไม่ได้อยู่ใน working folder ตั้งแต่แรก แต่ถูกซ่อนไว้ลึกในระบบ (path <code style="display:inline;padding:1px 6px">.../clmystery/mystery/streets/locked</code>) — สังเกตว่าน่าจะมีไฟล์ "เพิ่งถูกเพิ่มเข้ามาใหม่" จึงใช้ <b style="color:var(--p4)">ls -lt</b> เรียงไฟล์ตามเวลาแก้ไขล่าสุด (ใหม่สุดอยู่บน) เพื่อจับไฟล์แปลกปลอม แล้วเข้าไปตรวจข้างใน</p>
         <code><span class="tok-cmd">cd</span> /home/bootcamp/clmystery/mystery/streets/locked
-<span class="tok-cmd">ls</span> <span class="tok-flag">-lt</span>                       <span class="tok-com"># เรียงตามเวลาล่าสุด → เห็น cart_web.log ที่เพิ่งถูกเพิ่ม</span>
-<span class="tok-cmd">head</span> cart_web.log            <span class="tok-com"># เปิดดูข้างใน เป็น access log จริง</span>
-<span class="tok-cmd">grep</span> <span class="tok-flag">-an</span> <span class="tok-str">"hackathon#1"</span> cart_web.log   <span class="tok-com"># ยืนยันว่าใช่ไฟล์ที่อาจารย์ฝัง keyword ไว้</span></code>
-        <div class="find">✓ เจอ keyword <b style="color:#fff">hackathon#1</b> ในไฟล์ → มั่นใจว่า cart_web.log คือไฟล์เป้าหมายจริง จึงดึงเข้า working folder เพื่อเริ่มวิเคราะห์</div>
+<span class="tok-cmd">ls</span> <span class="tok-flag">-lt</span>                       <span class="tok-com"># sort by latest modified time</span>
+<span class="tok-cmd">head</span> cart_web.log            <span class="tok-com"># inspect: it is a real access log</span>
+<span class="tok-cmd">grep</span> <span class="tok-flag">-an</span> <span class="tok-str">"hackathon#1"</span> cart_web.log   <span class="tok-com"># confirm the planted keyword</span></code>
+        <div class="find" id="i_f0">✓ เจอ keyword <b style="color:#fff">hackathon#1</b> ในไฟล์ → มั่นใจว่า cart_web.log คือไฟล์เป้าหมายจริง จึงดึงเข้า working folder เพื่อเริ่มวิเคราะห์</div>
       </div></div>
 
       <div class="stepcard rv"><div class="snum"></div><div>
-        <div class="q">// คำถาม: log หน้าตาเป็นยังไง?</div>
-        <h4>สำรวจโครงสร้างไฟล์</h4>
-        <p>เปิดดูต้น–ท้ายไฟล์ก่อน เห็นว่าบรรทัดแรกปกติ (200, เร็ว) แต่บรรทัดท้ายเป็น error (504) และช้าผิดปกติ — เดาได้ว่าการโจมตีมาทีหลัง</p>
-        <code><span class="tok-cmd">head</span> -3 cart_web.log   <span class="tok-com"># 6 ช่อง: เวลา | IP | method | url | status | response_time</span>
-<span class="tok-cmd">tail</span> -3 cart_web.log   <span class="tok-com"># เจอ /searchE  504  11148ms  ผิดปกติชัด</span></code>
+        <div class="q" id="i_q1">// คำถาม: log หน้าตาเป็นยังไง?</div>
+        <h4 id="i_h1">สำรวจโครงสร้างไฟล์</h4>
+        <p id="i_p1">เปิดดูต้น–ท้ายไฟล์ก่อน เห็นว่าบรรทัดแรกปกติ (200, เร็ว) แต่บรรทัดท้ายเป็น error (504) และช้าผิดปกติ — เดาได้ว่าการโจมตีมาทีหลัง</p>
+        <code><span class="tok-cmd">head</span> -3 cart_web.log   <span class="tok-com"># 6 fields: time | IP | method | url | status | response_time</span>
+<span class="tok-cmd">tail</span> -3 cart_web.log   <span class="tok-com"># sees /searchE  504  11148ms  clearly abnormal</span></code>
       </div></div>
 
       <div class="stepcard rv"><div class="snum"></div><div>
-        <div class="q">// WHO: ใครยิง error เยอะที่สุด?</div>
-        <h4>หากลุ่ม IP คนร้าย</h4>
-        <p>request โจมตีทำให้เกิด error ดังนั้นกรองเฉพาะ <b style="color:var(--p4)">status ≥ 500</b> แล้วนับจำนวนต่อ IP เรียงมาก→น้อย</p>
+        <div class="q" id="i_q2">// WHO: ใครยิง error เยอะที่สุด?</div>
+        <h4 id="i_h2">หากลุ่ม IP คนร้าย</h4>
+        <p id="i_p2">request โจมตีทำให้เกิด error ดังนั้นกรองเฉพาะ <b style="color:var(--p4)">status ≥ 500</b> แล้วนับจำนวนต่อ IP เรียงมาก→น้อย</p>
         <code><span class="tok-cmd">awk</span> -F<span class="tok-str">' | '</span> <span class="tok-str">'$5>=500{c[$2]++} END{for(i in c)print c[i],i}'</span> cart_web.log | <span class="tok-cmd">sort</span> <span class="tok-flag">-rn</span> | <span class="tok-cmd">head</span> -25</code>
-        <div class="find">✓ ได้ 19 IP ที่ยิงเท่ากันหมด (~283,000 error/ตัว) → เป็น botnet ทีมเดียวกัน</div>
+        <div class="find" id="i_f2">✓ ได้ 19 IP ที่ยิงเท่ากันหมด (~283,000 error/ตัว) → เป็น botnet ทีมเดียวกัน</div>
       </div></div>
 
       <div class="stepcard rv"><div class="snum"></div><div>
-        <div class="q">// WHEN: ระบบล่ม vs หน่วง วันไหนบ้าง?</div>
-        <h4>วิเคราะห์ Pattern ตามเวลา</h4>
-        <p>ใช้ <code style="display:inline;padding:1px 6px">substr($1,1,10)</code> ตัดเอาเฉพาะวันที่ แล้วแยกนับ 2 แบบ: ล่ม (500/504) กับ หน่วง (200 + response > 5000ms)</p>
-        <code><span class="tok-com"># ระบบล่ม รายวัน</span>
+        <div class="q" id="i_q3">// WHEN: ระบบล่ม vs หน่วง วันไหนบ้าง?</div>
+        <h4 id="i_h3">วิเคราะห์ Pattern ตามเวลา</h4>
+        <p id="i_p3">ใช้ <code style="display:inline;padding:1px 6px">substr($1,1,10)</code> ตัดเอาเฉพาะวันที่ แล้วแยกนับ 2 แบบ: ล่ม (500/504) กับ หน่วง (200 + response > 5000ms)</p>
+        <code><span class="tok-com"># crashed days</span>
 <span class="tok-cmd">awk</span> -F<span class="tok-str">' | '</span> <span class="tok-str">'$5>=500{c[substr($1,1,10)]++} END{for(d in c)print d,c[d]}'</span> cart_web.log | <span class="tok-cmd">sort</span>
-<span class="tok-com"># ระบบหน่วง รายวัน (status 200 แต่ตอบช้า)</span>
+<span class="tok-com"># lagged days (status 200 but slow)</span>
 <span class="tok-cmd">awk</span> -F<span class="tok-str">' | '</span> <span class="tok-str">'$5==200 &amp;&amp; $6>5000{c[substr($1,1,10)]++} END{...}'</span> cart_web.log</code>
-        <div class="find">✓ โจมตี 406 วัน → ล่ม 297 วัน + หน่วง 109 วัน · พีคชั่วโมง 10:00–15:00</div>
+        <div class="find" id="i_f3">✓ โจมตี 406 วัน → ล่ม 297 วัน + หน่วง 109 วัน · พีคชั่วโมง 10:00–15:00</div>
       </div></div>
 
       <div class="stepcard rv"><div class="snum"></div><div>
-        <div class="q">// VERIFY: ไฟล์ไหนของจริง? ใครคือหัวโจก?</div>
-        <h4>ค้น keyword ยืนยันหลักฐาน</h4>
-        <p>ค้นคำว่า hackathon ในทุกไฟล์ — <code style="display:inline;padding:1px 6px">-a</code> บังคับอ่านไฟล์ใหญ่เป็น text, <code style="display:inline;padding:1px 6px">-n</code> โชว์เลขบรรทัด</p>
+        <div class="q" id="i_q4">// VERIFY: ไฟล์ไหนของจริง? ใครคือหัวโจก?</div>
+        <h4 id="i_h4">ค้น keyword ยืนยันหลักฐาน</h4>
+        <p id="i_p4">ค้นคำว่า hackathon ในไฟล์ — <code style="display:inline;padding:1px 6px">-a</code> บังคับอ่านไฟล์ใหญ่เป็น text, <code style="display:inline;padding:1px 6px">-n</code> โชว์เลขบรรทัด</p>
         <code><span class="tok-cmd">grep</span> <span class="tok-flag">-an</span> <span class="tok-str">"hackathon#1"</span> cart_web.log
-<span class="tok-com"># → เจอบรรทัดเดียว ผูกกับ 197.82.237.190 = หัวโจก</span></code>
-        <div class="find">✓ ยืนยัน cart_web.log คือไฟล์จริง · หัวโจกคือ 197.82.237.190</div>
+<span class="tok-com"># found on a single line tied to 197.82.237.190 = ringleader</span></code>
+        <div class="find" id="i_f4">✓ ยืนยัน cart_web.log คือไฟล์จริง · หัวโจกคือ 197.82.237.190</div>
       </div></div>
 
       <div class="stepcard rv"><div class="snum"></div><div>
-        <div class="q">// HIDDEN: ถอดชื่อจาก "ลายเซ็น" ใน URL</div>
-        <h4>ถอดรหัส Run-Length หาชื่อคนร้าย</h4>
-        <p>สังเกตว่า URL ของหัวโจกมีตัวอักษรแปลกต่อท้าย → ดึงตัวท้ายมาต่อกัน (ได้ NNNN…EEEE…) แล้ว <b style="color:var(--p2)">ยุบตัวซ้ำด้วย sed</b> เหลือตัวเดียว = อ่านเป็นข้อความ, แปลง _ เป็นช่องว่าง</p>
+        <div class="q" id="i_q5">// HIDDEN: ถอดชื่อจาก "ลายเซ็น" ใน URL</div>
+        <h4 id="i_h5">ถอดรหัส Run-Length หาชื่อคนร้าย</h4>
+        <p id="i_p5">สังเกตว่า URL ของหัวโจกมีตัวอักษรแปลกต่อท้าย → ดึงตัวท้ายมาต่อกัน (ได้ NNNN…EEEE…) แล้ว <b style="color:var(--p2)">ยุบตัวซ้ำด้วย sed</b> เหลือตัวเดียว = อ่านเป็นข้อความ, แปลง _ เป็นช่องว่าง</p>
         <code><span class="tok-cmd">grep</span> -a <span class="tok-str">"| 197.82.237.190 |"</span> cart_web.log \
  | <span class="tok-cmd">awk</span> -F<span class="tok-str">' | '</span> <span class="tok-str">'{u=$4; sub(/\.html$/,"",u);
      b=substr(u,1,length(u)-1);
      if(b ~ /^\/(search|cart|checkout|products|index|api\/v1\/user)$/)
         printf substr(u,length(u),1)}'</span> \
  | <span class="tok-cmd">sed</span> <span class="tok-str">'s/\(.\)\1*/\1/g'</span> | <span class="tok-cmd">tr</span> <span class="tok-str">'_' ' '</span></code>
-        <div class="find">✓ NEXUS CART WAS TOO EASY ... IT WAS ME — <b style="color:#fff">GOEMON</b></div>
+        <div class="find" id="i_f5">✓ NEXUS CART WAS TOO EASY ... IT WAS ME — <b style="color:#fff">GOEMON</b></div>
       </div></div>
 
     </div>
@@ -620,9 +627,69 @@ footer .big{font-family:'Space Grotesk';font-size:clamp(28px,5vw,48px);font-weig
 const D={"attackers": [{"ip": "209.103.8.44", "total_requests": 298272, "status_200": 14573, "status_500": 141684, "status_504": 142015, "first_seen": "2024-06-13 10:00:37", "last_seen": "2026-06-10 04:17:04"}, {"ip": "162.240.218.117", "total_requests": 298007, "status_200": 14617, "status_500": 141754, "status_504": 141636, "first_seen": "2024-06-13 10:02:31", "last_seen": "2026-06-10 04:14:00"}, {"ip": "197.82.237.190", "total_requests": 297954, "status_200": 14555, "status_500": 141786, "status_504": 141613, "first_seen": "2024-06-13 10:05:39", "last_seen": "2026-06-10 04:17:27"}, {"ip": "215.143.100.205", "total_requests": 297861, "status_200": 14849, "status_500": 141614, "status_504": 141398, "first_seen": "2024-06-13 10:00:54", "last_seen": "2026-06-10 04:15:15"}, {"ip": "199.242.130.73", "total_requests": 297789, "status_200": 14806, "status_500": 141284, "status_504": 141699, "first_seen": "2024-06-13 10:00:51", "last_seen": "2026-06-10 04:16:31"}, {"ip": "119.123.55.141", "total_requests": 297711, "status_200": 14377, "status_500": 141703, "status_504": 141631, "first_seen": "2024-06-13 10:00:41", "last_seen": "2026-06-10 04:16:30"}, {"ip": "148.9.19.27", "total_requests": 297518, "status_200": 14500, "status_500": 141356, "status_504": 141662, "first_seen": "2024-06-13 10:00:10", "last_seen": "2026-06-10 04:17:42"}, {"ip": "187.91.79.110", "total_requests": 297497, "status_200": 14786, "status_500": 141539, "status_504": 141172, "first_seen": "2024-06-13 10:00:28", "last_seen": "2026-06-10 04:17:15"}, {"ip": "196.45.2.86", "total_requests": 297488, "status_200": 14635, "status_500": 141440, "status_504": 141413, "first_seen": "2024-06-13 10:02:55", "last_seen": "2026-06-10 04:16:18"}, {"ip": "199.71.56.65", "total_requests": 297431, "status_200": 14662, "status_500": 141340, "status_504": 141429, "first_seen": "2024-06-13 10:01:25", "last_seen": "2026-06-10 04:17:23"}, {"ip": "14.121.165.122", "total_requests": 297343, "status_200": 14389, "status_500": 141731, "status_504": 141223, "first_seen": "2024-06-13 10:00:27", "last_seen": "2026-06-10 04:17:24"}, {"ip": "202.129.225.117", "total_requests": 297228, "status_200": 14637, "status_500": 141077, "status_504": 141514, "first_seen": "2024-06-13 10:01:08", "last_seen": "2026-06-10 04:17:41"}, {"ip": "211.92.75.1", "total_requests": 297161, "status_200": 14359, "status_500": 141839, "status_504": 140963, "first_seen": "2024-06-13 10:02:19", "last_seen": "2026-06-10 04:17:32"}, {"ip": "95.125.101.128", "total_requests": 297020, "status_200": 14513, "status_500": 141307, "status_504": 141200, "first_seen": "2024-06-13 10:00:43", "last_seen": "2026-06-10 04:17:05"}, {"ip": "14.252.124.193", "total_requests": 296879, "status_200": 14656, "status_500": 141141, "status_504": 141082, "first_seen": "2024-06-13 10:03:20", "last_seen": "2026-06-10 04:16:47"}, {"ip": "80.130.43.26", "total_requests": 296862, "status_200": 14527, "status_500": 141199, "status_504": 141136, "first_seen": "2024-06-13 10:01:53", "last_seen": "2026-06-10 04:17:38"}, {"ip": "139.94.203.41", "total_requests": 296826, "status_200": 14470, "status_500": 141475, "status_504": 140881, "first_seen": "2024-06-13 10:02:26", "last_seen": "2026-06-10 04:17:38"}, {"ip": "12.104.185.44", "total_requests": 296693, "status_200": 14305, "status_500": 141082, "status_504": 141306, "first_seen": "2024-06-13 10:00:20", "last_seen": "2026-06-10 04:13:31"}, {"ip": "131.33.12.73", "total_requests": 296029, "status_200": 14452, "status_500": 140656, "status_504": 140921, "first_seen": "2024-06-13 10:01:12", "last_seen": "2026-06-10 04:17:28"}], "timeline": {"labels": ["2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06"], "crash": [208835, 242359, 248999, 175395, 141794, 280398, 173912, 439876, 27365, 197829, 251153, 229942, 160501, 268825, 144141, 301476, 281968, 232253, 287113, 144608, 220193, 228148, 199856, 233488, 52474], "slow": [4178, 8257, 9985, 9672, 2730, 4145, 4105, 6870, 4208, 8863, 6892, 8496, 8819, 10920, 3268, 5299, 5558, 6489, 9454, 9286, 4833, 7947, 6853, 6164, 2708], "total": [584239, 894038, 891487, 883404, 926908, 848912, 916747, 826458, 871412, 908516, 858047, 897878, 888755, 884047, 926128, 842158, 880649, 865609, 878048, 926184, 805856, 897974, 875059, 897174, 270710]}, "status": {"200": 10608035, "304": 2581383, "404": 2584078, "500": 2687008, "504": 2685894}, "hours": ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"], "hour_vals": [225772, 225250, 226118, 221546, 221738, 218669, 215865, 214986, 216392, 217117, 274173, 275024, 219864, 277640, 280188, 282173, 225071, 227179, 230088, 233035, 232185, 231841, 228241, 229414], "secret": "NEXUS_CART_WAS_TO_EASY_YOUR_SYSTEM_WAS_ALREADY_FALING_APART_BEFORE_YOU_EVEN_REALIZED_IT_WAS_ME_GOEMON", "daytype": {"CRASH": 297, "SLOW": 109, "low": 325}, "first_atk": "2024-06-13", "last_atk": "2026-06-10", "totals": {"total_req": 21146398, "attack_req": 5372902, "ips": 19, "attack_days": 406}, "runs": [["N", 721], ["E", 1254], ["X", 1225], ["U", 1221], ["S", 1200], ["_", 442], ["C", 329], ["A", 1258], ["R", 1196], ["T", 1297], ["_", 818], ["W", 700], ["A", 1245], ["S", 1246], ["_", 260], ["T", 1007], ["O", 1768], ["_", 1159], ["E", 1241], ["A", 1209], ["S", 1241], ["Y", 186], ["_", 248], ["Y", 1188], ["O", 1209], ["U", 1310], ["R", 23], ["_", 641], ["S", 1226], ["Y", 620], ["S", 46], ["T", 1224], ["E", 1252], ["M", 1257], ["_", 1185]]};
 const fmt=n=>n.toLocaleString('en-US');
 
+/* ===== i18n ===== */
+const EN={
+ i_lede:'Behind the screen, a silent war is raging — we dug through <b style="color:#fff">21 million</b> log lines to hunt the hacker group and unmask their leader.',
+ i_btn1:'Start Investigation ↓', i_btn2:'Reveal the Mastermind',
+ i_s1:'Log lines analyzed', i_s2:'Attack requests detected', i_s3:'Hacker group IPs',
+ i_s4:'Days with attacker requests', i_s4n:'▸ 406 days of real attacks (crash+lag)',
+ i_s5:'Days the system CRASHED', i_s6:'Days the system LAGGED',
+ i_who_sub:'Filter requests that errored the system (status ≥ 500) and count by IP — we found <b style="color:var(--ink)">19 IPs</b> hitting with near-identical volume (~297,000 each), revealing a <b style="color:var(--p2)">coordinated botnet</b>.',
+ i_who_call:'💡 <b>Clue to the ringleader:</b> the keyword <code style="display:inline;padding:1px 7px">hackathon#1</code> appears on just <b>one line</b> of the log, tied to IP <b style="color:var(--p4)">197.82.237.190</b> → the ringleader who hid their own name.',
+ i_when_sub:'The attack alternated between two modes for 2 years — <span class="tag c">CRASH</span> (status 500/504) and <span class="tag s">SLOW</span> (status 200 but responding slower than 5 seconds).',
+ i_leg1:'Crashed (500/504)', i_leg2:'Lagged (200 slow)',
+ i_when_call:'🕐 <b>Pattern detected:</b> heaviest fire during <b>10:00–15:00</b> (business hours, for maximum damage); all 19 IPs started simultaneously at ~10:00 on <b>June 13, 2024</b>.',
+ i_hid_sub:'The attacker showed off by embedding a "digital signature" — secretly appending one character to each URL (e.g. <code style="display:inline;padding:1px 7px">/productsE</code>) and repeating it thousands of times, <b style="color:var(--p3)">Run-Length Encoded</b>.',
+ i_raw:'RAW SIGNATURE — trailing URL characters repeated in blocks (char × count)',
+ i_arrow:'↓&nbsp; collapse repeats into one <code style="display:inline;padding:1px 7px">sed &#39;s/(.)&#92;1*/&#92;1/g&#39;</code> &nbsp;↓',
+ i_meth_sub:'We analyzed a <b style="color:var(--ink)">1.4 GB / 21 million line</b> log file using pure Linux command-line tools (awk, grep, sed) — no database, no AI · Core idea: "normal = fast + 200, attack = slow + error".',
+ i_q0:'// Start: where was the mystery file hidden?', i_h0:'Hunt down the hidden file',
+ i_p0:'The file <code style="display:inline;padding:1px 6px">cart_web.log</code> was not in the working folder at first — it was hidden deep in the system (path <code style="display:inline;padding:1px 6px">.../clmystery/mystery/streets/locked</code>). Suspecting a newly added file, we used <b style="color:var(--p4)">ls -lt</b> to sort files by latest modified time (newest on top) to spot the intruder, then inspected it.',
+ i_f0:'✓ Found keyword <b style="color:#fff">hackathon#1</b> inside → confirmed cart_web.log is the real target, so we pulled it into the working folder to analyze.',
+ i_q1:'// Question: what does the log look like?', i_h1:'Explore the file structure',
+ i_p1:'Open the head and tail first. The first lines look normal (200, fast) but the last lines are errors (504) and abnormally slow — a sign the attack came later.',
+ i_q2:'// WHO: who fired the most errors?', i_h2:'Find the attacker IP group',
+ i_p2:'Attack requests cause errors, so filter only <b style="color:var(--p4)">status ≥ 500</b> and count per IP, sorted high to low.',
+ i_f2:'✓ Got 19 IPs all hitting equally (~283,000 errors each) → a single botnet team.',
+ i_q3:'// WHEN: which days crashed vs lagged?', i_h3:'Analyze the pattern over time',
+ i_p3:'Use <code style="display:inline;padding:1px 6px">substr($1,1,10)</code> to take just the date, then count two types separately: crash (500/504) and lag (200 + response > 5000ms).',
+ i_f3:'✓ 406 attack days → 297 crashed + 109 lagged · peak hours 10:00–15:00.',
+ i_q4:'// VERIFY: which file is real? Who is the ringleader?', i_h4:'Confirm evidence with a keyword search',
+ i_p4:'Search for hackathon in the file — <code style="display:inline;padding:1px 6px">-a</code> forces reading the huge file as text, <code style="display:inline;padding:1px 6px">-n</code> shows line numbers.',
+ i_f4:'✓ Confirmed cart_web.log is the real file · the ringleader is 197.82.237.190.',
+ i_q5:'// HIDDEN: decode the name from the URL signature', i_h5:'Crack the Run-Length code for the name',
+ i_p5:'The ringleader URLs carry a trailing character → concatenate them (gives NNNN…EEEE…), then <b style="color:var(--p2)">collapse repeats with sed</b> into one each = readable text, and turn _ into spaces.',
+ i_f5:'✓ NEXUS CART WAS TOO EASY ... IT WAS ME — <b style="color:#fff">GOEMON</b>'
+};
+const CHART_TITLES={
+ th:{ip:'จำนวน Request ต่อ IP (★ = หัวโจก)',time:'Timeline การโจมตีรายเดือน (มิ.ย.2024 – มิ.ย.2026)',hour:'โจมตีตามชั่วโมง (แดง = พีค 10–15น.)',status:'สัดส่วน HTTP Status'},
+ en:{ip:'Requests per IP (★ = ringleader)',time:'Monthly attack timeline (Jun 2024 – Jun 2026)',hour:'Attacks by hour (red = peak 10–15h)',status:'HTTP status breakdown'}
+};
+let LANG='th';
+const CH={};
+// store TH original html
+Object.keys(EN).forEach(id=>{const e=document.getElementById(id); if(e) e.dataset.th=e.innerHTML;});
+function applyChartTitles(){
+  const t=CHART_TITLES[LANG];
+  if(CH.ip){CH.ip.options.plugins.title.text=t.ip;CH.ip.update('none');}
+  if(CH.time){CH.time.options.plugins.title.text=t.time;CH.time.update('none');}
+  if(CH.hour){CH.hour.options.plugins.title.text=t.hour;CH.hour.update('none');}
+  if(CH.status){CH.status.options.plugins.title.text=t.status;CH.status.update('none');}
+}
+function setLang(l){
+  LANG=l;
+  Object.keys(EN).forEach(id=>{const e=document.getElementById(id); if(!e)return; e.innerHTML = (l==='en')?EN[id]:e.dataset.th;});
+  document.getElementById('langBtn').textContent = (l==='en')?'TH':'EN';
+  document.documentElement.lang=l;
+  applyChartTitles();
+}
+document.getElementById('langBtn').onclick=()=>setLang(LANG==='en'?'th':'en');
+
+/* scroll reveal */
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.rv').forEach(el=>io.observe(el));
 
+/* count-up */
 const cio=new IntersectionObserver(es=>es.forEach(e=>{
   if(!e.isIntersecting)return; cio.unobserve(e.target);
   const el=e.target, end=+el.dataset.count; let t0=null, dur=1400;
@@ -640,29 +707,30 @@ const G='rgba(255,255,255,.07)';
 const grad=(c,a,b)=>{const x=c.getContext('2d').createLinearGradient(0,0,0,300);x.addColorStop(0,a);x.addColorStop(1,b);return x;};
 
 function buildCharts(){
-new Chart(document.getElementById('ipChart'),{type:'bar',data:{labels:D.attackers.map(a=>a.ip),
+const T=CHART_TITLES[LANG];
+CH.ip=new Chart(document.getElementById('ipChart'),{type:'bar',data:{labels:D.attackers.map(a=>a.ip),
  datasets:[{data:D.attackers.map(a=>a.total_requests),
    backgroundColor:D.attackers.map(a=>a.ip==='197.82.237.190'?'#f59e0b':'rgba(6,182,212,.65)'),
    borderRadius:5,borderSkipped:false}]},
- options:{indexAxis:'y',layout:{padding:{left:6}},animation:{duration:1100},plugins:{legend:{display:false},title:{display:true,text:'จำนวน Request ต่อ IP (★ = หัวโจก)',color:'#eef1ff',font:{size:14}}},
+ options:{indexAxis:'y',layout:{padding:{left:6}},animation:{duration:1100},plugins:{legend:{display:false},title:{display:true,text:T.ip,color:'#eef1ff',font:{size:14}}},
    scales:{x:{grid:{color:G}},y:{grid:{display:false},afterFit:(s)=>{s.width=Math.max(s.width,142);},ticks:{padding:8,font:{size:11,family:"'JetBrains Mono'"}}}}}});
 
-new Chart(document.getElementById('timeChart'),{type:'line',data:{labels:D.timeline.labels,
+CH.time=new Chart(document.getElementById('timeChart'),{type:'line',data:{labels:D.timeline.labels,
  datasets:[
-  {label:'ล่ม',data:D.timeline.crash,borderColor:'#ff3366',backgroundColor:grad(document.getElementById('timeChart'),'rgba(255,51,102,.35)','rgba(255,51,102,0)'),fill:true,tension:.4,pointRadius:0,borderWidth:2.5},
-  {label:'หน่วง',data:D.timeline.slow,borderColor:'#f59e0b',backgroundColor:grad(document.getElementById('timeChart'),'rgba(245,158,11,.3)','rgba(245,158,11,0)'),fill:true,tension:.4,pointRadius:0,borderWidth:2.5}]},
- options:{animation:{duration:1400},plugins:{legend:{display:false},title:{display:true,text:'Timeline การโจมตีรายเดือน (มิ.ย.2024 – มิ.ย.2026)',color:'#eef1ff',font:{size:14}}},
+  {label:'crash',data:D.timeline.crash,borderColor:'#ff3366',backgroundColor:grad(document.getElementById('timeChart'),'rgba(255,51,102,.35)','rgba(255,51,102,0)'),fill:true,tension:.4,pointRadius:0,borderWidth:2.5},
+  {label:'lag',data:D.timeline.slow,borderColor:'#f59e0b',backgroundColor:grad(document.getElementById('timeChart'),'rgba(245,158,11,.3)','rgba(245,158,11,0)'),fill:true,tension:.4,pointRadius:0,borderWidth:2.5}]},
+ options:{animation:{duration:1400},plugins:{legend:{display:false},title:{display:true,text:T.time,color:'#eef1ff',font:{size:14}}},
    scales:{x:{grid:{color:G},ticks:{maxRotation:60,font:{size:9}}},y:{grid:{color:G}}}}});
 
-new Chart(document.getElementById('hourChart'),{type:'bar',data:{labels:D.hours.map(h=>h),
+CH.hour=new Chart(document.getElementById('hourChart'),{type:'bar',data:{labels:D.hours.map(h=>h),
  datasets:[{data:D.hour_vals,borderRadius:4,backgroundColor:D.hour_vals.map(v=>v>260000?'#ff3366':'rgba(124,58,237,.55)')}]},
- options:{animation:{duration:1200},plugins:{legend:{display:false},title:{display:true,text:'โจมตีตามชั่วโมง (แดง = พีค 10–15น.)',color:'#eef1ff',font:{size:13}}},
+ options:{animation:{duration:1200},plugins:{legend:{display:false},title:{display:true,text:T.hour,color:'#eef1ff',font:{size:13}}},
    scales:{x:{grid:{display:false},ticks:{font:{size:9}}},y:{grid:{color:G}}}}});
 
 const sc=D.status;
-new Chart(document.getElementById('statusChart'),{type:'doughnut',data:{labels:Object.keys(sc).map(k=>'HTTP '+k),
+CH.status=new Chart(document.getElementById('statusChart'),{type:'doughnut',data:{labels:Object.keys(sc).map(k=>'HTTP '+k),
  datasets:[{data:Object.values(sc),backgroundColor:['#06b6d4','#7c3aed','#f59e0b','#ff3366','#ec4899'],borderColor:'#070711',borderWidth:3,hoverOffset:8}]},
- options:{cutout:'62%',animation:{animateRotate:true,duration:1300},plugins:{legend:{position:'right',labels:{font:{size:11,family:"'JetBrains Mono'"},padding:12}},title:{display:true,text:'สัดส่วน HTTP Status',color:'#eef1ff',font:{size:13}}}}});
+ options:{cutout:'62%',animation:{animateRotate:true,duration:1300},plugins:{legend:{position:'right',labels:{font:{size:11,family:"'JetBrains Mono'"},padding:12}},title:{display:true,text:T.status,color:'#eef1ff',font:{size:13}}}}});
 }
 (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(buildCharts);
 
