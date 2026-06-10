@@ -639,12 +639,13 @@ Chart.defaults.color='#8b93b8';Chart.defaults.borderColor='rgba(255,255,255,.07)
 const G='rgba(255,255,255,.07)';
 const grad=(c,a,b)=>{const x=c.getContext('2d').createLinearGradient(0,0,0,300);x.addColorStop(0,a);x.addColorStop(1,b);return x;};
 
+function buildCharts(){
 new Chart(document.getElementById('ipChart'),{type:'bar',data:{labels:D.attackers.map(a=>a.ip),
  datasets:[{data:D.attackers.map(a=>a.total_requests),
    backgroundColor:D.attackers.map(a=>a.ip==='197.82.237.190'?'#f59e0b':'rgba(6,182,212,.65)'),
    borderRadius:5,borderSkipped:false}]},
- options:{indexAxis:'y',animation:{duration:1100},plugins:{legend:{display:false},title:{display:true,text:'จำนวน Request ต่อ IP (★ = หัวโจก)',color:'#eef1ff',font:{size:14}}},
-   scales:{x:{grid:{color:G}},y:{grid:{display:false},ticks:{font:{size:10,family:"'JetBrains Mono'"}}}}}});
+ options:{indexAxis:'y',layout:{padding:{left:6}},animation:{duration:1100},plugins:{legend:{display:false},title:{display:true,text:'จำนวน Request ต่อ IP (★ = หัวโจก)',color:'#eef1ff',font:{size:14}}},
+   scales:{x:{grid:{color:G}},y:{grid:{display:false},afterFit:(s)=>{s.width=Math.max(s.width,142);},ticks:{padding:8,font:{size:11,family:"'JetBrains Mono'"}}}}}});
 
 new Chart(document.getElementById('timeChart'),{type:'line',data:{labels:D.timeline.labels,
  datasets:[
@@ -662,6 +663,8 @@ const sc=D.status;
 new Chart(document.getElementById('statusChart'),{type:'doughnut',data:{labels:Object.keys(sc).map(k=>'HTTP '+k),
  datasets:[{data:Object.values(sc),backgroundColor:['#06b6d4','#7c3aed','#f59e0b','#ff3366','#ec4899'],borderColor:'#070711',borderWidth:3,hoverOffset:8}]},
  options:{cutout:'62%',animation:{animateRotate:true,duration:1300},plugins:{legend:{position:'right',labels:{font:{size:11,family:"'JetBrains Mono'"},padding:12}},title:{display:true,text:'สัดส่วน HTTP Status',color:'#eef1ff',font:{size:13}}}}});
+}
+(document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(buildCharts);
 
 const palette={'N':'#7c3aed','E':'#ec4899','X':'#06b6d4','U':'#f59e0b','S':'#22d3ee','_':'#475569','C':'#10b981','A':'#ff3366','R':'#a78bfa','T':'#fbbf24','W':'#34d399','O':'#f472b6','Y':'#60a5fa','M':'#fb923c'};
 function playDecoder(){
