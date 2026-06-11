@@ -35,7 +35,7 @@
 | # | ภารกิจ | คำตอบ |
 |---|--------|-------|
 | 1 | **WHO ARE THEY?** — ระบุ IP ทั้งหมดของกลุ่มแฮกเกอร์ | **19 IP** (botnet) |
-| 2 | **WHEN & HOW?** — หา Pattern และช่วงเวลาที่ระบบผิดปกติ | 406 วัน · ล่ม 297 / หน่วง 109 |
+| 2 | **WHEN & HOW?** — หา Pattern และช่วงเวลาที่ระบบผิดปกติ | 412 วัน · ล่ม 302 / หน่วง 131 |
 | 3 | **TELL PEOPLE** — แสดงผลเป็น Web App (Dashboard) | `dashboard.html` |
 | 4 | **HIDDEN BONUS** — ตามหาชื่อจริงของคนร้าย | **`GOEMON`** |
 
@@ -77,7 +77,7 @@ grep -an "hackathon#1" cart_web.log    # ยืนยันว่าเป็น
 ### STEP 01 — WHO: หากลุ่ม IP คนร้าย
 กรอง error (status ≥ 500) แล้วนับต่อ IP
 ```bash
-awk -F' | ' '$5>=500{c[$2]++} END{for(i in c)print c[i],i}' cart_web.log | sort -rn | head -25
+awk -F' [|] ' '$5>=500{c[$2]++} END{for(i in c)print c[i],i}' cart_web.log | sort -rn | head -25
 ```
 ✅ พบ **19 IP** ที่ยิงเท่ากันหมด (~283,000 error/ตัว) → botnet ทีมเดียวกัน
 
@@ -85,11 +85,11 @@ awk -F' | ' '$5>=500{c[$2]++} END{for(i in c)print c[i],i}' cart_web.log | sort 
 แยกนับ "ล่ม" (500/504) และ "หน่วง" (200 + response > 5000ms)
 ```bash
 # วันที่ระบบล่ม
-awk -F' | ' '$5>=500{c[substr($1,1,10)]++} END{for(d in c)print d,c[d]}' cart_web.log | sort
+awk -F' [|] ' '$5>=500{c[substr($1,1,10)]++} END{for(d in c)print d,c[d]}' cart_web.log | sort
 # วันที่ระบบหน่วง
-awk -F' | ' '$5==200 && $6>5000{c[substr($1,1,10)]++} END{for(d in c)print d,c[d]}' cart_web.log | sort
+awk -F' [|] ' '$5==200 && $6>5000{c[substr($1,1,10)]++} END{for(d in c)print d,c[d]}' cart_web.log | sort
 ```
-✅ โจมตี **406 วัน** → ล่ม 297 วัน + หน่วง 109 วัน · พีคชั่วโมง **10:00–15:00**
+✅ โจมตี **412 วัน** → ล่ม 302 วัน + หน่วง 131 วัน (เกิดทั้งสองในวันเดียว 21 วัน) · พีคชั่วโมง **10:00–15:00**
 
 ### STEP 03 — VERIFY: ยืนยันไฟล์จริง + หาหัวโจก
 ```bash
@@ -101,10 +101,10 @@ grep -an "hackathon#1" cart_web.log
 คนร้ายฝัง "ลายเซ็นดิจิทัล" โดยเติมตัวอักษร 1 ตัวท้าย URL (`/productsE`) ยิงซ้ำแบบ **Run-Length Encoding** → ดึงตัวท้ายมาต่อกัน แล้วยุบตัวซ้ำด้วย `sed`
 ```bash
 grep -a "| 197.82.237.190 |" cart_web.log \
- | awk -F' | ' '{u=$4; sub(/\.html$/,"",u);
+ | awk -F' [|] ' '{u=$4; sub(/\.html$/,"",u);
      b=substr(u,1,length(u)-1);
      if(b ~ /^\/(search|cart|checkout|products|index|api\/v1\/user)$/)
-        printf substr(u,length(u),1)}' \
+        printf "%s", substr(u,length(u),1)}' \
  | sed 's/\(.\)\1*/\1/g' | tr '_' ' '
 ```
 ✅ ถอดได้ข้อความ:
@@ -119,7 +119,7 @@ NEXUS CART WAS TOO EASY ... IT WAS ME — GOEMON
 | ภารกิจ | ผลลัพธ์ |
 |--------|---------|
 | 🔍 **WHO** | 19 IP — หัวโจก `197.82.237.190` |
-| ⏰ **WHEN & HOW** | 2024-06-13 → 2026-06-10 · DDoS botnet · ล่ม 297 วัน / หน่วง 109 วัน · พีค 10:00–15:00 |
+| ⏰ **WHEN & HOW** | 2024-06-13 → 2026-06-10 · DDoS botnet · ล่ม 302 วัน / หน่วง 131 วัน · พีค 10:00–15:00 |
 | 🏴‍☠️ **HIDDEN BONUS** | ชื่อคนร้าย = **`GOEMON`** |
 
 ### 🎯 รายชื่อ IP คนร้ายทั้ง 19 ตัว
