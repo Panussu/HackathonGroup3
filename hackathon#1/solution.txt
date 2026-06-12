@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+# ============================================================================
+#  THE SILENT THREAT — Hackathon Solution Script
+#  วิเคราะห์ cart_web.log เพื่อตอบ: WHO / WHEN&HOW / HIDDEN BONUS
+#  รูปแบบ log:  เวลา | IP | method | url | status | response_time   (คั่นด้วย " | ")
+# ============================================================================
+LOG="cart_web.log"
+
+echo "########## STEP 00: ตามหาไฟล์ที่อาจารย์ซ่อนไว้ ##########"
+# ไฟล์ cart_web.log ไม่ได้อยู่ใน working folder ตั้งแต่แรก — ถูกซ่อนลึกในระบบ
+#   path: /home/bootcamp/clmystery/mystery/streets/locked
+# รู้ได้ยังไง: สงสัยว่ามีไฟล์ "เพิ่งถูกเพิ่มเข้ามาใหม่" -> ls -lt เรียงตามเวลาล่าสุด (ใหม่อยู่บน)
+#   cd /home/bootcamp/clmystery/mystery/streets/locked
+#   ls -lt                                  # เห็น cart_web.log ที่เพิ่งถูกเพิ่ม
+#   head cart_web.log                       # เปิดดูข้างใน = access log จริง
+#   grep -an "hackathon#1" cart_web.log     # ยืนยันว่าใช่ไฟล์ที่อาจารย์ฝัง keyword ไว้
+# -> เจอ hackathon#1 = มั่นใจว่าใช่ไฟล์เป้าหมาย จึงดึงเข้า working folder มาวิเคราะห์ต่อ
+
+echo "########## STEP 0: ทำความรู้จักไฟล์ ##########"
+# รู้ได้ยังไง: head/tail ดูหน้าตาข้อมูล, wc -l นับขนาด
+head -3 "$LOG"            # ดูบรรทัดแรก  -> ปกติ status 200 ตอบเร็ว
+tail -3 "$LOG"            # ดูบรรทัดท้าย -> เจอ status 500/504 + ช้าผิดปกติ
+wc -l "$LOG"             # 21 ล้านบรรทัด
+
+
+echo "########## STEP 1: WHO — กลุ่ม IP คนร้าย ##########"
+# แนวคิด: request โจมตี = status >= 500 (ระบบ error/ล่ม)
+# นับว่า IP ไหนทำ error เยอะ -> เรียงมากไปน้อย
+awk -F' \\| ' '$5>=500{ ip=$2; gsub(/ /,"",ip); c[ip]++ }
+  END{ for(i in c) print c[i], i }' "$LOG" | sort -rn | head -25
+# ผล: ได้ 19 IP ที่ยิงเท่ากันหมด (~283,000 ครั้ง) = botnet ทีมเดียวกัน
+
+
+echo "########## STEP 2: WHEN&HOW — โจมตีเมื่อไหร่/อย่างไร ##########"
+# 2a) วันที่ระบบ "ล่ม" (status 500/504)  -- substr(,1,10) = ตัดเอาแค่ YYYY-MM-DD
+awk -F' \\| ' '$5>=500{ d=substr($1,1,10); crash[d]++ }
+  END{ for(d in crash) print d, crash[d] }' "$LOG" | sort > /tmp/crash_days.txt
+# 2b) วันที่ระบบ "หน่วง" (status 200 แต่ response_time > 5000 ms)
+awk -F' \\| ' '$5==200 && $6>5000{ d=substr($1,1,10); slow[d]++ }
+  END{ for(d in slow) print d, slow[d] }' "$LOG" | sort > /tmp/slow_days.txt
+echo "จำนวนวันที่ล่ม:   $(wc -l < /tmp/crash_days.txt)"
+echo "จำนวนวันที่หน่วง: $(wc -l < /tmp/slow_days.txt)"
+# 2c) โจมตีหนักช่วงชั่วโมงไหน  -- substr(,12,2) = ตัดเอาเลขชั่วโมง
+awk -F' \\| ' '$5>=500{ h=substr($1,12,2); hr[h]++ }
+  END{ for(h in hr) print h, hr[h] }' "$LOG" | sort
+
+
+echo "########## STEP 3: hackathon#1 — ยืนยันไฟล์จริง + หาหัวโจก ##########"
+# รู้ได้ยังไง: ค้น keyword "hackathon" ในทุกไฟล์ (-a อ่านไฟล์ใหญ่เป็น text, -n โชว์บรรทัด)
+grep -an "hackathon" "$LOG"      # เจอ hackathon#1 บรรทัดเดียว ผูกกับ IP 197.82.237.190 = หัวโจก
+# (Export.csv/.txt มี hackathon#2 = คนละข้อ / result.txt มี hackathon#1 เพราะคัดมาจาก log นี้)
+
+
+echo "########## STEP 4: HIDDEN BONUS — ถอดชื่อคนร้าย ##########"
+# แนวคิด: คนร้ายแอบแปะ "ตัวอักษร 1 ตัว" ท้ายชื่อ endpoint ทุก request
+#         เช่น /products -> /productsE , /cart -> /cart_ , ยิงตัวเดิมซ้ำพันครั้ง (Run-Length)
+# 4a) กรองเฉพาะ request ของหัวโจก (log เรียงตามเวลาอยู่แล้ว)
+grep -a "| 197.82.237.190 |" "$LOG" > /tmp/goemon.log
+# 4b) ดึง "ตัวอักษรท้าย url" มาต่อกัน (เฉพาะที่ตัดท้ายแล้วเป็น endpoint จริง)
+awk -F' \\| ' '{
+    u=$4; sub(/\.html$/,"",u)
+    base=substr(u,1,length(u)-1)
+    if(base ~ /^\/(search|cart|checkout|products|index|api\/v1\/user)$/)
+        printf "%s", substr(u,length(u),1)
+}' /tmp/goemon.log > /tmp/rawchars.txt
+# 4c) ยุบตัวซ้ำ (ถอด Run-Length) + แทน _ ด้วยช่องว่าง  --> อ่านเป็นข้อความ
+echo "=== SECRET MESSAGE ==="
+sed 's/\(.\)\1*/\1/g' /tmp/rawchars.txt | head -c 99 | tr '_' ' '; echo
+echo "=== ชื่อคนร้าย = GOEMON ==="

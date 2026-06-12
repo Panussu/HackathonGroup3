@@ -50,9 +50,12 @@
 | `solution.sh` | 🐚 สคริปต์ bash วิเคราะห์ทั้งหมด รันซ้ำได้ |
 | `attackers.csv` | ข้อมูล 19 IP คนร้าย + สถิติ status / ช่วงเวลา |
 | `attackers_ip_list.txt` | รายชื่อ IP คนร้ายล้วน (19 รายการ) |
-| `timeline_daily.csv` | ข้อมูลการโจมตีรายวัน 731 วัน |
+| `timeline_daily.csv` | ไทม์ไลน์รายวันครบ 731 วัน (2024-06-10 → 2026-06-10) — โจมตี 412 วัน |
+| `attack_by_hour.csv` | สรุปการโจมตีราย "ชั่วโมง" (00–23) แยกล่ม (500/504) / หน่วง (200 > 5s) |
+| `attack_by_weekday.csv` | สรุปการโจมตีราย "วันในสัปดาห์" + จำนวนวันจริงที่ถูกโจมตี |
+| `weekday_hour_analysis.py` | สคริปต์ Python วิเคราะห์ ชั่วโมง × วัน พร้อม heatmap |
 
-> ⚠️ ไฟล์ข้อมูลดิบ `cart_web.log` (1.4 GB) ไม่ได้รวมไว้ในรีโพเพราะมีขนาดใหญ่
+> ⚠️ ไฟล์ข้อมูลดิบ `cart_web.log` (1.4 GB · 21,146,398 บรรทัด) ไม่ได้รวมไว้ในรีโพเพราะมีขนาดใหญ่
 
 ---
 
@@ -90,7 +93,9 @@ awk -F' [|] ' '$5>=500{c[substr($1,1,10)]++} END{for(d in c)print d,c[d]}' cart_
 # วันที่ระบบหน่วง
 awk -F' [|] ' '$5==200 && $6>5000{c[substr($1,1,10)]++} END{for(d in c)print d,c[d]}' cart_web.log | sort
 ```
-✅ โจมตี **412 วัน** → ล่ม 302 วัน + หน่วง 131 วัน (เกิดทั้งสองในวันเดียว 21 วัน) · พีคชั่วโมง **10:00–15:00**
+✅ โจมตี **412 วัน** → ล่ม 302 วัน + หน่วง 131 วัน (เกิดทั้งสองในวันเดียว 21 วัน)
+- **"ล่ม" (500/504)** กระจายตัวทุกชั่วโมง/ทุกวันสม่ำเสมอ
+- **"หน่วง" (200 ช้า > 5s)** เจาะจงมาก — เกิดเฉพาะชั่วโมง **10, 11, 13, 14, 15 น. (เว้นเที่ยง 12:00)** และเฉพาะวัน **จันทร์ / อังคาร / พฤหัสบดี** เท่านั้น
 
 ### STEP 03 — VERIFY: ยืนยันไฟล์จริง + หาหัวโจก
 ```bash
@@ -108,10 +113,12 @@ grep -a "| 197.82.237.190 |" cart_web.log \
         printf "%s", substr(u,length(u),1)}' \
  | sed 's/\(.\)\1*/\1/g' | tr '_' ' '
 ```
-✅ ถอดได้ข้อความ:
+✅ ถอดได้ข้อความเต็ม (run-length ยุบตัวซ้ำ ทำให้ `TOO→TO`, `FALLING→FALING`):
 ```
-NEXUS CART WAS TOO EASY ... IT WAS ME — GOEMON
+NEXUS CART WAS TOO EASY. YOUR SYSTEM WAS ALREADY FALLING APART
+BEFORE YOU EVEN REALIZED. IT WAS ME — GOEMON
 ```
+> ข้อความนี้วนซ้ำต่อเนื่องตลอด log ของหัวโจก → ลายเซ็นปิดท้าย **`GOEMON`**
 
 ---
 
@@ -120,7 +127,7 @@ NEXUS CART WAS TOO EASY ... IT WAS ME — GOEMON
 | ภารกิจ | ผลลัพธ์ |
 |--------|---------|
 | 🔍 **WHO** | 19 IP — หัวโจก `197.82.237.190` |
-| ⏰ **WHEN & HOW** | 2024-06-13 → 2026-06-10 · DDoS botnet · ล่ม 302 วัน / หน่วง 131 วัน · พีค 10:00–15:00 |
+| ⏰ **WHEN & HOW** | 2024-06-13 → 2026-06-10 · DDoS botnet · ล่ม 302 วัน / หน่วง 131 วัน · ช่วงหน่วงพีก 10:00–15:00 น. (เว้นเที่ยง · เฉพาะ จ./อ./พฤ.) |
 | 🏴‍☠️ **HIDDEN BONUS** | ชื่อคนร้าย = **`GOEMON`** |
 
 ### 🎯 รายชื่อ IP คนร้ายทั้ง 19 ตัว
@@ -157,13 +164,13 @@ open dashboard.html
 ---
 # 👃 E-Nose Odor Intensity Evaluation & Anomaly Detection
 
-โปรเจกต์วิเคราะห์ข้อมูลและสร้างโมเดล Machine Learning เพื่อประเมินความเข้มขิ่นของกลิ่น (Dilution-to-Threshold: D/T Ratio) จากสถานีตรวจวัดกลิ่นต่อเนื่อง (Electronic Nose) เพื่อตรวจจับเหตุการณ์ผิดปกติ (Anomaly Detection) และสนับสนุนการตัดสินใจของหน้างาน (โรงงาน/โรงบำบัดน้ำเสีย) ในการตอบสนองต่อข้อร้องเรียนของชุมชนรอบข้างได้อย่างมีหลักฐานและรวดเร็ว
+โปรเจกต์วิเคราะห์ข้อมูลและสร้างโมเดล Machine Learning เพื่อประเมินความเข้มข้นของกลิ่น (Dilution-to-Threshold: D/T Ratio) จากสถานีตรวจวัดกลิ่นต่อเนื่อง (Electronic Nose) เพื่อตรวจจับเหตุการณ์ผิดปกติ (Anomaly Detection) และสนับสนุนการตัดสินใจของหน้างาน (โรงงาน/โรงบำบัดน้ำเสีย) ในการตอบสนองต่อข้อร้องเรียนของชุมชนรอบข้างได้อย่างมีหลักฐานและรวดเร็ว
 
 ## 📌 บริบทและเป้าหมายของโครงการ (Research Goal)
 หน้างานประสบปัญหาชุมชนรอบข้างร้องเรียนเรื่องกลิ่นรบกวนบ่อยครั้ง ผู้บริหารและผู้จัดการจึงต้องการเครื่องมือที่ช่วยให้:
 1. เข้าใจสถานการณ์ความรุนแรงของกลิ่นจากข้อมูล Sensor ทั้ง 8 ตัว และปัจจัยสภาพอากาศ
 2. ตอบข้อร้องเรียนจากชุมชนได้อย่างมีหลักฐานอ้างอิงทางวิทยาศาสตร์
-3. ตัดสินใจแก้ปัญหาได้ทันท่วงทีว่าควรเข้าตรวจสอบและแก้ไขที่จุดใด เมืิ่อใด
+3. ตัดสินใจแก้ปัญหาได้ทันท่วงทีว่าควรเข้าตรวจสอบและแก้ไขที่จุดใด เมื่อใด
 
 **เป้าหมายสูงสุด:** *"ประเมินความเข้มกลิ่น (D/T) จากค่าของ sensor ทั้ง 8 ตัว และตรวจจับช่วงเวลาที่กลิ่นผิดปกติ เพื่อสนับสนุนการตัดสินใจของหน้างาน"*
 
@@ -202,6 +209,28 @@ open dashboard.html
   * Root Mean Squared Error (RMSE)
   * R-squared ($R^2$) เพื่อเลือกโมเดลที่ดีที่สุดไปใช้งาน
 
+**ผลการเปรียบเทียบโมเดล (ทำนายค่า D/T):**
+
+| โมเดล | MAE | RMSE | R² |
+|------|-----|------|-----|
+| **HistGradientBoosting** ★ | **0.3581** | **0.4998** | **0.8612** |
+| Random Forest | 0.4129 | 0.5570 | 0.8276 |
+| Linear Regression | 1.3971 | 1.6392 | −0.4931 |
+
+> ★ โมเดลที่ดีที่สุด (RMSE ต่ำสุด · R² = 0.86) บันทึกไว้ที่ `best_odor_model.pkl`
+> Linear Regression ได้ R² ติดลบ เพราะ extrapolate ช่วงกลิ่นแรงที่ไม่เคยเห็นไม่ได้ — โมเดลแบบ tree (RF/HGB) รับมือได้ดีกว่า
+
+**ทดสอบพยากรณ์ล่วงหน้า (Model เทียบ Persistence baseline):**
+
+| Horizon | Persistence RMSE | Model RMSE | ผู้ชนะ |
+|--------:|-----------------:|-----------:|:------|
+| 30 นาที | 0.7585 | 0.9152 | Persistence |
+| 60 นาที | 0.9980 | 1.0659 | Persistence |
+| 120 นาที | 1.3272 | 1.2543 | **Model** |
+| 180 นาที | 1.5845 | 1.4774 | **Model** |
+
+> สรุป: ระยะสั้น (30–60 นาที) ใช้ persistence ก็เพียงพอ — แต่ตั้งแต่ ~2 ชั่วโมงขึ้นไป โมเดลเริ่มชนะ (ที่ 120 นาที ดีกว่า 5.5%) เพราะ persistence ตามแนวโน้มขาขึ้นของกลิ่นไม่ทัน
+
 ### Step 6 — Presentation, Automation & Action
 * นำเสนอผลลัพธ์ผ่านกราฟเปรียบเทียบค่าจริง (Actual) และค่าทำนาย (Predicted) เพื่อดูความแม่นยำ
 * Export ผลลัพธ์การทำนายออกมาเป็นไฟล์ `.csv` สำหรับระบบอื่นนำไปใช้งานต่อ
@@ -222,22 +251,52 @@ open dashboard.html
 
 ---
 
+## 📂 โครงสร้างไฟล์ (Files — hackathon#2)
+
+| ไฟล์ | คำอธิบาย |
+|------|----------|
+| `enose_analysis_improved.ipynb` | 📓 Notebook วิเคราะห์หลัก (Data Science Process ครบ 6 ขั้นตอน) |
+| `Export.csv` | ข้อมูลดิบจากสถานี E-Nose — 130,343 แถว × 17 คอลัมน์ |
+| `best_odor_model.pkl` | 🤖 โมเดลที่ดีที่สุด (HistGradientBoosting) พร้อมใช้งาน |
+| `odor_alert_sample.csv` | ตัวอย่างผลพยากรณ์ + ระดับแจ้งเตือน (Low / Medium / High) |
+| `odor_presentation.pdf` | 🖥️ สไลด์นำเสนอผลโครงการ |
+
+> ⚠️ ไฟล์ `Export.csv` ขึ้นต้นด้วยบรรทัด Excel dialect `sep=,` (ต้อง skip ก่อนโหลด) และมี marker `hackathon#2` แฝงอยู่ 1 แถว ซึ่งถูกลบออกตอนทำความสะอาดข้อมูล
+
+---
+
 ## 💻 การติดตั้งและเริ่มต้นใช้งาน (Getting Started)
 
 ### Prerequisites
 โปรแกรมและไลบรารีที่จำเป็นต้องใช้:
-```bash
+```text
 python >= 3.8
-pandas
-numpy
-scikit-learn
-matplotlib
-seaborn
-jupyterlab
+pandas · numpy · scikit-learn · matplotlib · seaborn · jupyterlab
+```
+
+### วิธีรัน
+```bash
+# 1) ติดตั้งไลบรารี
+pip install pandas numpy scikit-learn matplotlib seaborn jupyterlab
+
+# 2) เปิด Notebook วิเคราะห์
+jupyter lab enose_analysis_improved.ipynb
+
+# 3) (ทางเลือก) โหลดโมเดลที่เทรนไว้แล้วเพื่อทำนายทันที
+python -c "import pickle; m=pickle.load(open('best_odor_model.pkl','rb')); print(m)"
+```
+
+---
+
+## 🛠️ Tech Stack (hackathon#2)
+`Python` · `pandas` · `numpy` · `scikit-learn` (HistGradientBoosting) · `matplotlib` · `seaborn` · `Jupyter`
+
+---
+
 <div align="center">
 
 **Together, we secure tomorrow.** 🛡️
 
-*HackathonGroup3 · The Silent Threat · NexusCart Incident Response*
+*HackathonGroup3 · The Silent Threat (hackathon#1) · E-Nose Odor Detection (hackathon#2)*
 
 </div>
