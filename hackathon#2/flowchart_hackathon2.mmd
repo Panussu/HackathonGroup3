@@ -1,0 +1,46 @@
+flowchart TD
+    START(["▶️ START<br/>ข้อมูลดิบจากสถานี E-Nose"])
+    S1["1️⃣ Setting Research Goal<br/>ตั้งโจทย์ Regression · ทำนายค่า D/T"]
+    S2["2️⃣ Retrieving Data<br/>Export.csv · 130,343 แถว × 17 คอลัมน์<br/>(2026-02-12 → 05-14 · ทุก 1 นาที)"]
+    S3["3️⃣ Data Cleaning<br/>skip บรรทัด 'sep=,' · parse datetime/numeric<br/>ลบ marker 'hackathon#2' (1 แถว) · ลบ 421 แถว sensor ว่างทั้ง 8"]
+    S4["4️⃣ EDA<br/>trend · spike · correlation<br/>(8 sensor + อากาศ เทียบ D/T)"]
+    S5{"5️⃣ Modeling + Evaluation<br/>เทียบ MAE / RMSE / R²"}
+    M1["✅ HistGradientBoosting<br/>R² 0.86 (ดีที่สุด)"]
+    M2["Random Forest<br/>R² 0.83"]
+    M3["Linear Regression<br/>R² −0.49"]
+    S6["6️⃣ Presentation · Automation · Action"]
+    O1["🚦 ทำนาย D/T → Alert<br/>Low / Medium / High"]
+    O2["💾 best_odor_model.pkl<br/>+ odor_alert_sample.csv"]
+    END(["🏁 END · พร้อมใช้งานหน้างาน<br/>แจ้งเตือนกลิ่นแบบ real-time"])
+
+    START --> S1 --> S2 --> S3 --> S4 --> S5
+    S5 -->|"เลือกใช้"| M1
+    S5 -->|"เทียบแล้วแพ้"| M2
+    S5 -->|"เทียบแล้วแพ้"| M3
+    M1 --> S6
+    S6 --> O1
+    S6 --> O2
+    O1 --> END
+    O2 --> END
+
+    classDef startEnd fill:#111827,stroke:#000000,color:#ffffff,stroke-width:2px;
+    classDef goal fill:#e0e7ff,stroke:#4f46e5,color:#312e81,stroke-width:1.5px;
+    classDef data fill:#e0f2fe,stroke:#0284c7,color:#0c4a6e,stroke-width:1.5px;
+    classDef clean fill:#fef9c3,stroke:#ca8a04,color:#713f12,stroke-width:1.5px;
+    classDef eda fill:#dcfce7,stroke:#16a34a,color:#14532d,stroke-width:1.5px;
+    classDef decision fill:#fde68a,stroke:#d97706,color:#78350f,stroke-width:2px;
+    classDef winner fill:#bbf7d0,stroke:#15803d,color:#14532d,stroke-width:2.5px;
+    classDef rejected fill:#f3f4f6,stroke:#9ca3af,color:#6b7280,stroke-width:1px,stroke-dasharray:4 3;
+    classDef action fill:#ede9fe,stroke:#7c3aed,color:#4c1d95,stroke-width:1.5px;
+    classDef output fill:#cffafe,stroke:#0891b2,color:#164e63,stroke-width:1.5px;
+
+    class START,END startEnd;
+    class S1 goal;
+    class S2 data;
+    class S3 clean;
+    class S4 eda;
+    class S5 decision;
+    class M1 winner;
+    class M2,M3 rejected;
+    class S6 action;
+    class O1,O2 output;
