@@ -1,0 +1,28 @@
+flowchart TD
+    START(["▶️ START<br/>ได้รับโจทย์ Incident Response<br/>วิเคราะห์ Access Log NexusCart (1.4 GB)"])
+    A["🔍 STEP 00 · ตามหาไฟล์ที่ซ่อน<br/>ls -lt → grep 'hackathon#1'"]
+    B["📖 STEP 0 · รู้จักไฟล์<br/>head / tail / wc -l<br/>21,146,398 บรรทัด · 6 fields"]
+    C["💥 STEP 1 · WHO<br/>กรอง status ≥ 500 แล้วนับต่อ IP<br/>→ 19 IP botnet (~283k error/ตัว)"]
+    D["⏰ STEP 2 · WHEN/HOW<br/>นับวันล่ม (500/504) + วันหน่วง (200 ช้า > 5s)<br/>→ 412 วัน · หน่วงพีก 10–15 น. (จ./อ./พฤ.)"]
+    E["✔️ STEP 3 · VERIFY<br/>grep 'hackathon#1' เจอบรรทัดเดียว<br/>→ หัวโจก 197.82.237.190"]
+    F["🏴‍☠️ STEP 4 · HIDDEN BONUS<br/>ดึงตัวอักษรท้าย URL ของหัวโจก → ยุบ RLE (sed)<br/>→ ถอดชื่อ GOEMON"]
+    G["🌐 OUTPUT · TELL PEOPLE<br/>dashboard.html · กราฟครบ · TH/EN · ออฟไลน์ 100%"]
+    END(["🏁 END · ปิดคดี<br/>คนร้าย = GOEMON<br/>ส่งมอบ Dashboard นำเสนอผล"])
+
+    START --> A --> B --> C --> D --> E --> F --> G --> END
+
+    classDef startEnd fill:#111827,stroke:#000000,color:#ffffff,stroke-width:2px;
+    classDef discover fill:#e0f2fe,stroke:#0284c7,color:#0c4a6e,stroke-width:1.5px;
+    classDef who fill:#fee2e2,stroke:#dc2626,color:#7f1d1d,stroke-width:1.5px;
+    classDef whenc fill:#ffedd5,stroke:#ea580c,color:#7c2d12,stroke-width:1.5px;
+    classDef verify fill:#dcfce7,stroke:#16a34a,color:#14532d,stroke-width:1.5px;
+    classDef bonus fill:#fae8ff,stroke:#c026d3,color:#701a75,stroke-width:1.5px;
+    classDef output fill:#ede9fe,stroke:#7c3aed,color:#4c1d95,stroke-width:1.5px;
+
+    class START,END startEnd;
+    class A,B discover;
+    class C who;
+    class D whenc;
+    class E verify;
+    class F bonus;
+    class G output;
